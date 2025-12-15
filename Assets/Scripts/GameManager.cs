@@ -125,8 +125,12 @@ public class GameManager : MonoBehaviour
 
         if (!HasRemainingPellets())
         {
-            pacman.gameObject.SetActive(false);
-            Invoke(nameof(NewRound), 3f);
+            foreach (Transform pelletTransform in pellets)
+            {
+                pelletTransform.gameObject.SetActive(true);
+            }
+            //pacman.gameObject.SetActive(false);
+            //Invoke(nameof(NewRound), 3f);
         }
     }
 
