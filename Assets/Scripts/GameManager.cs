@@ -11,9 +11,11 @@ public class GameManager : MonoBehaviour
     [SerializeField] private Transform pellets;
     [SerializeField] private Text gameOverText;
     [SerializeField] private Text scorePacmanText;
+    [SerializeField] private Text scoreGhostText;
     [SerializeField] private Text livesText;
 
     public int scorePacman { get; private set; } = 0;
+    public int scoreGhost { get; private set; } = 0;
     public int lives { get; private set; } = 3;
 
     private int ghostMultiplier = 1;
@@ -49,6 +51,7 @@ public class GameManager : MonoBehaviour
     private void NewGame()
     {
         SetScorePacman(0);
+        SetScoreGhost(0);
         SetLives(3);
         NewRound();
     }
@@ -95,6 +98,11 @@ public class GameManager : MonoBehaviour
         this.scorePacman = scorePacman;
         scorePacmanText.text = scorePacman.ToString().PadLeft(2, '0');
     }
+    private void SetScoreGhost(int scoreGhost)
+    {
+        this.scoreGhost = scoreGhost;
+        scoreGhostText.text = scoreGhost.ToString().PadLeft(2, '0');
+    }
 
     public void PacmanEaten()
     {
@@ -121,13 +129,18 @@ public class GameManager : MonoBehaviour
     {
         pellet.gameObject.SetActive(false);
         
-        if (collector is Pacman)
+        var pacmanCollector = collector.GetComponent<Pacman>();
+        if (pacmanCollector != null)
         {
             SetScorePacman(scorePacman + pellet.points);
         }
-        else if (collector is Ghost)
+        else
         {
-            // Potentially add score for ghost collecting pellet
+            var ghostCollector = collector.GetComponent<Ghost>();
+            if (ghostCollector != null)
+            {
+                SetScoreGhost(scoreGhost + pellet.points);
+            }
         }
      
         if (!HasRemainingPellets())
@@ -145,20 +158,35 @@ public class GameManager : MonoBehaviour
     {
         pellet.gameObject.SetActive(false);
         
-        if (collector is Pacman)
+        var pacmanCollector = collector.GetComponent<Pacman>();
+        if (pacmanCollector != null)
         {
             for (int i = 0; i < ghosts.Length; i++) 
             {
                 ghosts[i].frightened.Enable(pellet.duration);
             }
 
-        SetScorePacman(scorePacman + pellet.points);
-        CancelInvoke(nameof(ResetGhostMultiplier));
-        Invoke(nameof(ResetGhostMultiplier), pellet.duration);
+            SetScorePacman(scorePacman + pellet.points);
+            CancelInvoke(nameof(ResetGhostMultiplier));
+            Invoke(nameof(ResetGhostMultiplier), pellet.duration);
         }
-        else if (collector is Ghost)
+        else
         {
-            // Potentially add score for ghost collecting power pellet
+            var ghostCollector = collector.GetComponent<Ghost>();
+            if (ghostCollector != null)
+            {
+                SetScoreGhost(scoreGhost + pellet.points);
+            }
+        }
+
+        if (!HasRemainingPellets())
+        {
+            foreach (Transform pelletTransform in pellets)
+            {
+                pelletTransform.gameObject.SetActive(true);
+            }
+            //pacman.gameObject.SetActive(false);
+            //Invoke(nameof(NewRound), 3f);
         }
         
     }
