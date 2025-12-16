@@ -6,7 +6,21 @@ public class PowerPellet : Pellet
 
     protected override void Eat()
     {
-        GameManager.Instance.PowerPelletEaten(this);
+        GameManager.Instance.PowerPelletEaten(this, collector);
     }
+    private void OnTriggerEnter2D(Collider2D other)
+    {   
+        collector = other.GetComponent<MonoBehaviour>();
+        if (other.gameObject.layer == LayerMask.NameToLayer("Pacman") ) 
+        {
+            Eat();
+        }
+        if (other.gameObject.layer == LayerMask.NameToLayer("Ghost") ) 
+        {
+            //Eat();
+        }
 
+    }
+    
 }
+

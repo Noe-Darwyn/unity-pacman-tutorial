@@ -10,10 +10,10 @@ public class GameManager : MonoBehaviour
     [SerializeField] private Pacman pacman;
     [SerializeField] private Transform pellets;
     [SerializeField] private Text gameOverText;
-    [SerializeField] private Text scoreText;
+    [SerializeField] private Text scorePacmanText;
     [SerializeField] private Text livesText;
 
-    public int score { get; private set; } = 0;
+    public int scorePacman { get; private set; } = 0;
     public int lives { get; private set; } = 3;
 
     private int ghostMultiplier = 1;
@@ -48,7 +48,7 @@ public class GameManager : MonoBehaviour
 
     private void NewGame()
     {
-        SetScore(0);
+        SetScorePacman(0);
         SetLives(3);
         NewRound();
     }
@@ -90,10 +90,10 @@ public class GameManager : MonoBehaviour
         livesText.text = "x" + lives.ToString();
     }
 
-    private void SetScore(int score)
+    private void SetScorePacman(int scorePacman)
     {
-        this.score = score;
-        scoreText.text = score.ToString().PadLeft(2, '0');
+        this.scorePacman = scorePacman;
+        scorePacmanText.text = scorePacman.ToString().PadLeft(2, '0');
     }
 
     public void PacmanEaten()
@@ -112,17 +112,24 @@ public class GameManager : MonoBehaviour
     public void GhostEaten(Ghost ghost)
     {
         int points = ghost.points * ghostMultiplier;
-        SetScore(score + points);
+        SetScorePacman(scorePacman + points);
 
         ghostMultiplier++;
     }
 
-    public void PelletEaten(Pellet pellet)
+    public void PelletEaten(Pellet pellet, MonoBehaviour collector)
     {
         pellet.gameObject.SetActive(false);
-
-        SetScore(score + pellet.points);
-
+        
+        if (collector is Pacman)
+        {
+            SetScorePacman(scorePacman + pellet.points);
+        }
+        else if (collector is Ghost)
+        {
+            // Potentially add score for ghost collecting pellet
+        }
+     
         if (!HasRemainingPellets())
         {
             foreach (Transform pelletTransform in pellets)
@@ -134,15 +141,26 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public void PowerPelletEaten(PowerPellet pellet)
+    public void PowerPelletEaten(PowerPellet pellet, MonoBehaviour collector)
     {
-        for (int i = 0; i < ghosts.Length; i++) {
-            ghosts[i].frightened.Enable(pellet.duration);
-        }
+        pellet.gameObject.SetActive(false);
+        
+        if (collector is Pacman)
+        {
+            for (int i = 0; i < ghosts.Length; i++) 
+            {
+                ghosts[i].frightened.Enable(pellet.duration);
+            }
 
-        PelletEaten(pellet);
+        SetScorePacman(scorePacman + pellet.points);
         CancelInvoke(nameof(ResetGhostMultiplier));
         Invoke(nameof(ResetGhostMultiplier), pellet.duration);
+        }
+        else if (collector is Ghost)
+        {
+            // Potentially add score for ghost collecting power pellet
+        }
+        
     }
 
     private bool HasRemainingPellets()
