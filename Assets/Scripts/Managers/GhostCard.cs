@@ -8,13 +8,11 @@ namespace GhostCardSpace
     [CreateAssetMenu(fileName = "New Ghost Card", menuName = "Ghost Card")]
     public class GhostCard : ScriptableObject
     {
-        // Basic Info
         [Header("Basic Info")]
         public Sprite Sprite;
         public int health;
         public int points = 0;
 
-        // Traits and Modifiers
         [Header("Traits and Modifiers")]
         public GhostTrait trait;
 
@@ -26,22 +24,25 @@ namespace GhostCardSpace
             Duplicitous
         }
         
-        // Movement and Behavior Stats
         [Header("Movement and Behavior Stats")]
         [Header("Base Stats")]
         public int baseSpeed;
+        // Not displayed, might be used for calculations
         public int baseSpeedMultiplier;
+
         [Header("Chase Stats")]
         public int chaseDuration;
         public int chaseSpeedMutliplier;
         public int packProximity;
+
         [Header("Spawn Stats")]  
         public int respawnDuration;
-        
+
         [Header("Scatter Stats")]
         public int scatterDuration;
         public int scatterSpeedMultiplier;
         public int scatterProximity;
+        // Not displayed, used once the UI setup is done
         public ScatterCorner scatterCorner;
         public enum ScatterCorner
         {
