@@ -16,14 +16,14 @@ MonoBehaviour:
   health: 4
   points: 200
   trait: 0
-  baseSpeed: 0
-  baseSpeedMultiplier: 0
-  chaseDuration: 0
-  chaseSpeedMutliplier: 0
-  packProximity: 0
+  baseSpeed: 1
+  baseSpeedMultiplier: 1
+  chaseDuration: 10
+  chaseSpeedMutliplier: 4
+  packProximity: 5
   respawnDuration: 10
-  scatterDuration: 0
-  scatterSpeedMultiplier: 0
-  scatterProximity: 0
+  scatterDuration: 10
+  scatterSpeedMultiplier: 3
+  scatterProximity: 5
   scatterCorner: 3
   frightenedSpeedMultiplier: 1

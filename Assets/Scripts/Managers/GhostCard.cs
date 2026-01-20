@@ -18,10 +18,10 @@ namespace GhostCardSpace
 
         public enum GhostTrait
         {
-            Imprevisible,
-            Agressive,
-            Ambusher,
-            Duplicitous
+            Imp,
+            Agr,
+            Amb,
+            Dup
         }
         
         [Header("Movement and Behavior Stats")]
